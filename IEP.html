@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcul de note d'ancienneté</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        input, button { padding: 8px; margin: 5px; }
+        .result { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculateur de note d'ancienneté</h2>
+        
+        <label>Entrez le nombre d'années d'ancienneté :</label>
+        <input type="number" id="anciennete" step="0.5" placeholder="Ex: 12.5">
+        <button onclick="calculerNote()">Calculer</button>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function calculerNote() {
+            // Récupération et validation de la valeur
+            const years = parseFloat(document.getElementById('anciennete').value);
+            if (isNaN(years) || years < 0) {
+                alert("Veuillez entrer un nombre valide ≥ 0 !");
+                return;
+            }
+
+            // Calcul des points par tranche
+            let note = 0;
+            let remainingYears = years;
+
+            // Tranche 1 : 1-10 ans → 2 points/an
+            if (remainingYears > 0) {
+                const tranche1 = Math.min(remainingYears, 10);
+                note += tranche1 * 2;
+                remainingYears -= tranche1;
+            }
+
+            // Tranche 2 : 11-15 ans → 2.5 points/an
+            if (remainingYears > 0) {
+                const tranche2 = Math.min(remainingYears, 5); // 15 - 10 = 5 ans max
+                note += tranche2 * 2.5;
+                remainingYears -= tranche2;
+            }
+
+            // Tranche 3 : 16-20 ans → 3 points/an
+            if (remainingYears > 0) {
+                const tranche3 = Math.min(remainingYears, 5); // 20 - 15 = 5 ans max
+                note += tranche3 * 3;
+                remainingYears -= tranche3;
+            }
+
+            // Tranche 4 : 21-30 ans → 3.5 points/an
+            if (remainingYears > 0) {
+                const tranche4 = Math.min(remainingYears, 10); // 30 - 20 = 10 ans max
+                note += tranche4 * 3.5;
+                remainingYears -= tranche4;
+            }
+
+            // Tranche 5 : >31 ans → 4 points/an
+            if (remainingYears > 0) {
+                note += remainingYears * 4;
+            }
+
+            // Affichage du résultat
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <strong>Ancienneté :</strong> ${years} ans<br>
+                <strong>Note totale :</strong> ${note.toFixed(2)} points<br>
+                <strong>Détail des tranches :</strong><br>
+                - 1-10 ans : ${Math.min(years, 10)} ans × 2 = ${Math.min(years, 10)*2} pts<br>
+                ${years > 10 ? `- 11-15 ans : ${Math.min(years-10, 5)} ans × 2.5 = ${Math.min(years-10, 5)*2.5} pts<br>` : ''}
+                ${years > 15 ? `- 16-20 ans : ${Math.min(years-15, 5)} ans × 3 = ${Math.min(years-15, 5)*3} pts<br>` : ''}
+                ${years > 20 ? `- 21-30 ans : ${Math.min(years-20, 10)} ans × 3.5 = ${Math.min(years-20, 10)*3.5} pts<br>` : ''}
+                ${years > 30 ? `- 31+ ans : ${years-30} ans × 4 = ${(years-30)*4} pts<br>` : ''}
+            `;
+        }
+    </script>
+</body>
+</html>

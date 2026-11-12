@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questions & Réponses</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f5fa;
+  color: #172b4d;
+}
+
+header {
+  background: linear-gradient(120deg, #071d49, #1456a0);
+  color: white;
+  text-align: center;
+  padding: 35px 15px;
+}
+
+header h1 {
+  margin: 0 0 10px;
+}
+
+.container {
+  max-width: 850px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccd5e0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.question {
+  background: white;
+  margin: 12px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px #00000010;
+}
+
+.question button {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  background: white;
+  color: #123d78;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}
+
+.question button:hover {
+  background: #edf4ff;
+}
+
+.answer {
+  display: none;
+  padding: 18px;
+  line-height: 1.7;
+  border-top: 1px solid #e5eaf0;
+}
+
+.answer.open {
+  display: block;
+}
+
+.add-section {
+  margin-top: 35px;
+  padding: 22px;
+  background: white;
+  border-radius: 12px;
+}
+
+.add-section h2 {
+  margin-top: 0;
+}
+
+.add-btn {
+  background: #1456a0;
+  color: white;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #718096;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Questions & Réponses</h1>
+  <p>Votre espace de connaissance et de formation</p>
+</header>
+
+<div class="container">
+
+  <input
+    type="text"
+    id="search"
+    placeholder="Rechercher une question..."
+    oninput="searchQuestions()"
+  >
+
+  <div id="questionList"></div>
+
+  <section class="add-section">
+    <h2>Ajouter une question</h2>
+
+    <input
+      type="text"
+      id="newQuestion"
+      placeholder="Écrivez votre question..."
+    >
+
+    <textarea
+      id="newAnswer"
+      rows="4"
+      placeholder="Écrivez votre réponse..."
+    ></textarea>
+
+    <button class="add-btn" onclick="addQuestion()">
+      + Ajouter
+    </button>
+  </section>
+
+</div>
+
+<footer>
+  Questions & Réponses © 2026
+</footer>
+
+<script>
+let questions = [
+  {
+    question: "Qu'est-ce qu'une plateforme de formation ?",
+    answer: "C'est un espace numérique permettant d'apprendre, de suivre des cours et de développer ses compétences."
+  },
+  {
+    question: "Comment accéder aux formations ?",
+    answer: "Vous pouvez accéder aux formations depuis votre espace utilisateur, selon les conditions d'accès de la plateforme."
+  },
+  {
+    question: "Pourquoi développer ses compétences ?",
+    answer: "Pour améliorer ses connaissances, renforcer ses capacités et mieux se préparer aux opportunités du futur."
+  }
+];
+
+function displayQuestions(data = questions) {
+  const list = document.getElementById("questionList");
+  list.innerHTML = "";
+
+  data.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "question";
+
+    const button = document.createElement("button");
+    button.textContent = "＋ " + item.question;
+
+    const answer = document.createElement("div");
+    answer.className = "answer";
+    answer.textContent = item.answer;
+
+    button.onclick = () => {
+      answer.classList.toggle("open");
+      button.textContent =
+        (answer.classList.contains("open") ? "− " : "＋ ")
+        + item.question;
+    };
+
+    div.appendChild(button);
+    div.appendChild(answer);
+    list.appendChild(div);
+  });
+}
+
+function addQuestion() {
+  const q = document.getElementById("newQuestion").value.trim();
+  const a = document.getElementById("newAnswer").value.trim();
+
+  if (!q || !a) {
+    alert("Veuillez remplir la question et la réponse.");
+    return;
+  }
+
+  questions.push({ question: q, answer: a });
+
+  document.getElementById("newQuestion").value = "";
+  document.getElementById("newAnswer").value = "";
+
+  displayQuestions();
+}
+
+function searchQuestions() {
+  const value = document.getElementById("search")
+    .value.toLowerCase();
+
+  const filtered = questions.filter(item =>
+    item.question.toLowerCase().includes(value) ||
+    item.answer.toLowerCase().includes(value)
+  );
+
+  displayQuestions(filtered);
+}
+
+displayQuestions();
+</script>
+
+</body>
+</html>
